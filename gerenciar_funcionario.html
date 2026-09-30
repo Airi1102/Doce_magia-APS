@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Gerenciar Funcionários</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: aliceblue;
+            margin: 0;
+        }
+
+        header {
+            background-color: lightblue;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+        }
+
+        .funcionario {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .funcionario h3 {
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .botoes {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .botoes button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-size: 15px;
+        }
+
+        .salvar {
+            background-color: lightblue;
+        }
+
+        .excluir {
+            background-color: #e57373;
+        }
+
+        #mensagem {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .links a {
+            color: lightblue;
+            margin: 0 10px;
+        }
+
+        .vazio {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+    <h1>Gerenciar Funcionários</h1>
+</header>
+
+<main>
+
+    <h2>Funcionários cadastrados</h2>
+
+    <div id="listaFuncionarios"></div>
+
+    <div id="mensagem"></div>
+
+    <div class="links">
+
+        <a href="funcionario.html">
+            Cadastrar funcionário
+        </a>
+    </div>
+
+</main>
+
+<script>
+
+    const listaFuncionarios =
+        document.getElementById('listaFuncionarios');
+
+    const mensagem =
+        document.getElementById('mensagem');
+
+    let funcionarios =
+        JSON.parse(localStorage.getItem('funcionarios')) || [];
+
+
+    function mostrarFuncionarios() {
+
+        listaFuncionarios.innerHTML = '';
+
+        if (funcionarios.length === 0) {
+
+            listaFuncionarios.innerHTML =
+                '<div class="vazio">' +
+                'Nenhum funcionário cadastrado.' +
+                '</div>';
+
+            return;
+        }
+
+        funcionarios.forEach(function(funcionario, index) {
+
+            const div = document.createElement('div');
+
+            div.className = 'funcionario';
+
+            div.innerHTML = `
+
+                <h3>Funcionário</h3>
+
+                <label>Nome:</label>
+                <input
+                    type="text"
+                    id="nome-${index}"
+                    value="${funcionario.nome}"
+                >
+
+                <label>CPF:</label>
+                <input
+                    type="text"
+                    id="cpf-${index}"
+                    value="${funcionario.cpf}"
+                >
+
+                <label>Telefone:</label>
+                <input
+                    type="tel"
+                    id="telefone-${index}"
+                    value="${funcionario.telefone}"
+                >
+
+                <label>E-mail:</label>
+                <input
+                    type="email"
+                    id="email-${index}"
+                    value="${funcionario.email}"
+                >
+
+                <label>Cargo:</label>
+
+                <select id="cargo-${index}">
+
+                    <option value="Gerente"
+                        ${funcionario.cargo === 'Gerente'
+                            ? 'selected' : ''}>
+                        Gerente
+                    </option>
+
+                    <option value="Atendente"
+                        ${funcionario.cargo === 'Atendente'
+                            ? 'selected' : ''}>
+                        Atendente
+                    </option>
+
+                    <option value="Cozinheiro"
+                        ${funcionario.cargo === 'Cozinheiro'
+                            ? 'selected' : ''}>
+                        Cozinheiro
+                    </option>
+
+                    <option value="Confeiteiro"
+                        ${funcionario.cargo === 'Confeiteiro'
+                            ? 'selected' : ''}>
+                        Confeiteiro
+                    </option>
+
+                    <option value="Auxiliar"
+                        ${funcionario.cargo === 'Auxiliar'
+                            ? 'selected' : ''}>
+                        Auxiliar
+                    </option>
+
+                </select>
+
+                <label>Salário:</label>
+
+                <input
+                    type="number"
+                    id="salario-${index}"
+                    value="${funcionario.salario}"
+                    min="0"
+                    step="0.01"
+                >
+
+                <div class="botoes">
+
+                    <button
+                        class="salvar"
+                        type="button"
+                        onclick="salvarFuncionario(${index})">
+                        Salvar alterações
+                    </button>
+
+                    <button
+                        class="excluir"
+                        type="button"
+                        onclick="excluirFuncionario(${index})">
+                        Excluir
+                    </button>
+
+                </div>
+            `;
+
+            listaFuncionarios.appendChild(div);
+
+        });
+    }
+
+
+    function salvarFuncionario(index) {
+
+        funcionarios[index].nome =
+            document.getElementById(`nome-${index}`).value;
+
+        funcionarios[index].cpf =
+            document.getElementById(`cpf-${index}`).value;
+
+        funcionarios[index].telefone =
+            document.getElementById(`telefone-${index}`).value;
+
+        funcionarios[index].email =
+            document.getElementById(`email-${index}`).value;
+
+        funcionarios[index].cargo =
+            document.getElementById(`cargo-${index}`).value;
+
+        funcionarios[index].salario =
+            Number(document.getElementById(`salario-${index}`).value);
+
+        localStorage.setItem(
+            'funcionarios',
+            JSON.stringify(funcionarios)
+        );
+
+        mensagem.textContent =
+            'Funcionário atualizado com sucesso!';
+
+        mensagem.style.color = 'green';
+
+        setTimeout(function() {
+            mensagem.textContent = '';
+        }, 2000);
+
+        mostrarFuncionarios();
+    }
+
+
+    function excluirFuncionario(index) {
+
+        const confirmar =
+            confirm(
+                'Tem certeza que deseja excluir este funcionário?'
+            );
+
+        if (!confirmar) {
+            return;
+        }
+
+        funcionarios.splice(index, 1);
+
+        localStorage.setItem(
+            'funcionarios',
+            JSON.stringify(funcionarios)
+        );
+
+        mensagem.textContent =
+            'Funcionário excluído com sucesso!';
+
+        mensagem.style.color = 'green';
+
+        mostrarFuncionarios();
+
+        setTimeout(function() {
+            mensagem.textContent = '';
+        }, 2000);
+    }
+
+
+    mostrarFuncionarios();
+
+</script>
+
+</body>
+
+</html>

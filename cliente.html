@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Clientes</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: aliceblue;
+            margin: 0;
+        }
+
+        header {
+            background-color: lightblue;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 12px;
+            background-color: lightblue;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: lightblue;
+        }
+
+        #mensagem {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: lightblue;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Cadastrar Clientes</h1>
+</header>
+
+<main>
+
+    <h2>Novo Cliente</h2>
+
+    <form id="formCliente">
+
+        <label for="nome">Nome completo:</label>
+        <input type="text" id="nome" required>
+
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" required>
+
+        <label for="telefone">Telefone:</label>
+        <input type="tel" id="telefone" required>
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email">
+
+        <label for="endereco">Endereço:</label>
+        <textarea id="endereco" required></textarea>
+
+        <button type="submit">Cadastrar cliente</button>
+
+    </form>
+
+    <div id="mensagem"></div>
+
+
+</main>
+
+<script>
+
+    const form = document.getElementById('formCliente');
+    const mensagem = document.getElementById('mensagem');
+
+    form.addEventListener('submit', function(event) {
+
+        event.preventDefault();
+
+        let clientes =
+            JSON.parse(localStorage.getItem('clientes')) || [];
+
+        const cliente = {
+
+            id: Date.now(),
+
+            nome: document.getElementById('nome').value,
+
+            cpf: document.getElementById('cpf').value,
+
+            telefone: document.getElementById('telefone').value,
+
+            email: document.getElementById('email').value,
+
+            endereco: document.getElementById('endereco').value
+
+        };
+
+        clientes.push(cliente);
+
+        localStorage.setItem(
+            'clientes',
+            JSON.stringify(clientes)
+        );
+
+        mensagem.textContent =
+            'Cliente cadastrado com sucesso!';
+
+        mensagem.style.color = 'green';
+
+        form.reset();
+
+    });
+
+</script>
+
+</body>
+</html>
