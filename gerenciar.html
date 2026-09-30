@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Produtos</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: aliceblue;
+            margin: 0;
+        }
+
+        header {
+            background-color: lightblue;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .produto {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .produto h3 {
+            margin-top: 0;
+        }
+
+        .botoes {
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .editar {
+            background-color: #4388d1;
+        }
+
+        .excluir {
+            background-color: #c73f4d;
+        }
+
+        .editar:hover {
+            background-color: #4388d1;
+        }
+
+        .excluir:hover {
+            background-color: #c73f4d;
+        }
+
+        .vazio {
+            background-color: white;
+            text-align: center;
+            padding: 40px;
+            border-radius: 10px;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .links a {
+            color: lightblue;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Gerenciar Produtos</h1>
+</header>
+
+<main>
+
+    <div id="listaProdutos"></div>
+
+    <div class="links">
+        <a href="cadastro.html">Cadastrar produto</a>
+        <a href="produtos.html">Ver produtos</a>
+    </div>
+
+</main>
+
+<script>
+
+    function carregarProdutos() {
+
+        const lista = document.getElementById('listaProdutos');
+
+        const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+
+        if (produtos.length === 0) {
+
+            lista.innerHTML = `
+                <div class="vazio">
+                    <h2>Nenhum produto cadastrado</h2>
+                </div>
+            `;
+
+            return;
+        }
+
+        lista.innerHTML = '';
+
+        produtos.forEach(function(produto) {
+
+            const div = document.createElement('div');
+
+            div.className = 'produto';
+
+            div.innerHTML = `
+                <h3>${produto.nome}</h3>
+
+                <p><strong>Categoria:</strong> ${produto.categoria}</p>
+
+                <p><strong>Descrição:</strong> ${produto.descricao}</p>
+
+                <p><strong>Preço:</strong> R$ ${produto.preco.toFixed(2)}</p>
+
+                ${
+                    produto.precoPromocional
+                    ? `<p><strong>Preço promocional:</strong> R$ ${produto.precoPromocional.toFixed(2)}</p>`
+                    : ''
+                }
+
+                <div class="botoes">
+
+                    <button class="editar" onclick="editarProduto(${produto.id})">
+                        Editar
+                    </button>
+
+                    <button class="excluir" onclick="excluirProduto(${produto.id})">
+                        Excluir
+                    </button>
+
+                </div>
+            `;
+
+            lista.appendChild(div);
+        });
+    }
+
+
+    function excluirProduto(id) {
+
+        const confirmar = confirm('Deseja realmente excluir este produto?');
+
+        if (!confirmar) {
+            return;
+        }
+
+        let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+
+        produtos = produtos.filter(function(produto) {
+            return produto.id !== id;
+        });
+
+        localStorage.setItem('produtos', JSON.stringify(produtos));
+
+        carregarProdutos();
+    }
+
+
+    function editarProduto(id) {
+
+        let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+
+        const produto = produtos.find(function(produto) {
+            return produto.id === id;
+        });
+
+        if (!produto) {
+            return;
+        }
+
+        const nome = prompt('Nome do produto:', produto.nome);
+
+        if (nome === null) {
+            return;
+        }
+
+        const descricao = prompt('Descrição:', produto.descricao);
+
+        if (descricao === null) {
+            return;
+        }
+
+        const preco = prompt('Preço:', produto.preco);
+
+        if (preco === null) {
+            return;
+        }
+
+        const precoPromocional = prompt(
+            'Preço promocional (deixe vazio se não tiver):',
+            produto.precoPromocional || ''
+        );
+
+        if (precoPromocional === null) {
+            return;
+        }
+
+        produto.nome = nome;
+        produto.descricao = descricao;
+        produto.preco = Number(preco);
+
+        produto.precoPromocional = precoPromocional === ''
+            ? null
+            : Number(precoPromocional);
+
+        localStorage.setItem('produtos', JSON.stringify(produtos));
+
+        carregarProdutos();
+    }
+
+
+    carregarProdutos();
+
+</script>
+
+</body>
+</html>
+
