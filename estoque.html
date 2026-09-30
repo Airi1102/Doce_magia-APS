@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Produtos</title>
+    <title>Cadastrar Ingredientes</title>
 
     <style>
         body {
@@ -40,18 +41,12 @@
         }
 
         input,
-        textarea,
         select {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 6px;
-        }
-
-        textarea {
-            height: 100px;
-            resize: vertical;
         }
 
         button {
@@ -91,81 +86,89 @@
 <body>
 
 <header>
-    <h1>Cadastrar Produtos</h1>
+    <h1>Cadastrar Ingredientes</h1>
 </header>
 
 <main>
 
-    <h2>Novo Produto</h2>
+    <h2>Novo Ingrediente</h2>
 
-    <form id="formProduto">
+    <form id="formIngrediente">
 
-        <label for="nome">Nome do produto:</label>
+        <label for="nome">Nome do ingrediente:</label>
         <input type="text" id="nome" required>
 
-        <label for="descricao">Descrição:</label>
-        <textarea id="descricao" required></textarea>
-
-        <label for="preco">Preço:</label>
-        <input type="number" id="preco" step="0.01" min="0" required>
-
-        <label for="precoPromocional">Preço promocional:</label>
-        <input type="number" id="precoPromocional" step="0.01" min="0">
-
-        <label for="categoria">Categoria:</label>
-        <select id="categoria" required>
+        <label for="unidade">Unidade de medida:</label>
+        <select id="unidade" required>
             <option value="">Selecione</option>
-            <option value="Bolos">Bolos</option>
-            <option value="Doces">Doces</option>
-            <option value="Salgados">Salgados</option>
-            <option value="Bebidas">Bebidas</option>
+            <option value="kg">Quilograma (kg)</option>
+            <option value="g">Grama (g)</option>
+            <option value="L">Litro (L)</option>
+            <option value="mL">Mililitro (mL)</option>
+            <option value="unidade">Unidade</option>
         </select>
 
-        <button type="submit">Cadastrar produto</button>
+        <label for="quantidade">Quantidade em estoque:</label>
+        <input type="number" id="quantidade" min="0" step="1" value="0" required>
+
+        <button type="submit">Cadastrar ingrediente</button>
 
     </form>
 
     <div id="mensagem"></div>
 
     <div class="links">
-        <a href="produtos.html">Ver produtos</a>
-        <a href="gerenciar.html">Gerenciar produtos</a>
+        <a href="ingredientes.html">Ver estoque</a>
+        <a href="gerenciar_ingredientes.html">Gerenciar estoque</a>
     </div>
 
 </main>
 
 <script>
-    const form = document.getElementById('formProduto');
+
+    const form = document.getElementById('formIngrediente');
     const mensagem = document.getElementById('mensagem');
 
     form.addEventListener('submit', function(event) {
 
         event.preventDefault();
 
-        let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+        let ingredientes =
+            JSON.parse(localStorage.getItem('ingredientes')) || [];
 
-        const produto = {
+        const ingrediente = {
+
             id: Date.now(),
+
             nome: document.getElementById('nome').value,
-            descricao: document.getElementById('descricao').value,
-            preco: Number(document.getElementById('preco').value),
-            precoPromocional: document.getElementById('precoPromocional').value
-                ? Number(document.getElementById('precoPromocional').value)
-                : null,
-            categoria: document.getElementById('categoria').value
+
+            unidade: document.getElementById('unidade').value,
+
+            quantidade: Number(
+                document.getElementById('quantidade').value
+            )
+
         };
 
-        produtos.push(produto);
+        ingredientes.push(ingrediente);
 
-        localStorage.setItem('produtos', JSON.stringify(produtos));
+        localStorage.setItem(
+            'ingredientes',
+            JSON.stringify(ingredientes)
+        );
 
-        mensagem.textContent = 'Produto cadastrado com sucesso!';
+        mensagem.textContent =
+            'Ingrediente cadastrado com sucesso!';
+
         mensagem.style.color = 'green';
 
         form.reset();
+
+        document.getElementById('quantidade').value = 0;
+
     });
+
 </script>
 
 </body>
 </html>
-

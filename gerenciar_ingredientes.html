@@ -1,0 +1,240 @@
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Estoque</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: aliceblue;
+            margin: 0;
+        }
+
+        header {
+            background-color: lightblue;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+        }
+
+        .ingrediente {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .ingrediente h3 {
+            margin: 0 0 15px 0;
+        }
+
+        .controle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controle button {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            margin: 0;
+            background-color: lightblue;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .controle button:hover {
+            background-color: #87ceeb;
+        }
+
+        .controle input {
+            width: 100px;
+            height: 40px;
+            box-sizing: border-box;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .unidade {
+            font-size: 16px;
+        }
+
+        .mensagem {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: green;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .links a {
+            color: lightblue;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Gerenciar Estoque</h1>
+</header>
+
+<main>
+
+    <h2>Quantidade dos ingredientes</h2>
+
+    <div id="listaEstoque"></div>
+
+    <div id="mensagem" class="mensagem"></div>
+
+    <div class="links">
+        <a href="ingredientes.html">Ver estoque</a>
+        <a href="estoque.html">Cadastrar ingrediente</a>
+    </div>
+
+</main>
+
+<script>
+
+    const listaEstoque = document.getElementById('listaEstoque');
+    const mensagem = document.getElementById('mensagem');
+
+    let ingredientes =
+        JSON.parse(localStorage.getItem('ingredientes')) || [];
+
+    function mostrarIngredientes() {
+
+        listaEstoque.innerHTML = '';
+
+        if (ingredientes.length === 0) {
+
+            listaEstoque.innerHTML =
+                '<p>Nenhum ingrediente cadastrado.</p>';
+
+            return;
+        }
+
+        ingredientes.forEach(function(ingrediente, index) {
+
+            const div = document.createElement('div');
+
+            div.className = 'ingrediente';
+
+            div.innerHTML = `
+                <h3>${ingrediente.nome}</h3>
+
+                <div class="controle">
+
+                    <button type="button"
+                        onclick="diminuirQuantidade(${index})">
+                        −
+                    </button>
+
+                    <input
+                        type="number"
+                        min="0"
+                        value="${ingrediente.quantidade}"
+                        id="quantidade-${index}"
+                    >
+
+                    <button type="button"
+                        onclick="aumentarQuantidade(${index})">
+                        +
+                    </button>
+
+                    <span class="unidade">
+                        ${ingrediente.unidade}
+                    </span>
+
+                </div>
+            `;
+
+            listaEstoque.appendChild(div);
+        });
+    }
+
+
+    function aumentarQuantidade(index) {
+
+        ingredientes[index].quantidade++;
+
+        salvarEstoque();
+
+        mostrarIngredientes();
+
+        mostrarMensagem();
+    }
+
+
+    function diminuirQuantidade(index) {
+
+        if (ingredientes[index].quantidade > 0) {
+
+            ingredientes[index].quantidade--;
+
+            salvarEstoque();
+
+            mostrarIngredientes();
+
+            mostrarMensagem();
+        }
+    }
+
+
+    function salvarEstoque() {
+
+        localStorage.setItem(
+            'ingredientes',
+            JSON.stringify(ingredientes)
+        );
+    }
+
+
+    function mostrarMensagem() {
+
+        mensagem.textContent =
+            'Estoque atualizado com sucesso!';
+
+        setTimeout(function() {
+
+            mensagem.textContent = '';
+
+        }, 2000);
+    }
+
+
+    mostrarIngredientes();
+
+</script>
+
+</body>
+</html>
+```
