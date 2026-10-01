@@ -1,0 +1,76 @@
+body {
+            font-family: Arial, sans-serif;
+            background-color: aliceblue;
+            margin: 0;
+        }
+
+        header {
+            background-color: lightblue;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .produto {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .produto h3 {
+            margin-top: 0;
+        }
+
+        .botoes {
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .editar {
+            background-color: #4388d1;
+        }
+
+        .excluir {
+            background-color: #c73f4d;
+        }
+
+        .editar:hover {
+            background-color: #4388d1;
+        }
+
+        .excluir:hover {
+            background-color: #c73f4d;
+        }
+
+        .vazio {
+            background-color: white;
+            text-align: center;
+            padding: 40px;
+            border-radius: 10px;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .links a {
+            color: lightblue;
+            margin: 0 10px;
+        }
